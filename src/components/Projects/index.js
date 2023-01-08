@@ -2,7 +2,7 @@ import React from 'react';
 import List from './List'
 import api from "../../lib/api";
 import {Button, CircularProgress} from "@material-ui/core";
-
+import {sortAsc, sortDesc} from "../../lib/api";
 class Projects extends React.Component {
 
     state = {
@@ -16,18 +16,12 @@ class Projects extends React.Component {
 
         if (sortDirection === 'desc') {
 
-            const sortedProjectsList = await this.state.projectsList.sort(function (x, y) {
-                return y.timestamp - x.timestamp;
-            })
+            const sortedProjectsList = await sortDesc(this.state.projectsList)
             this.setState({projectsList: sortedProjectsList, sortDirection: 'desc'})
 
         } else {
-
-            const sortedProjectsList = await this.state.projectsList.sort(function (x, y) {
-                return x.timestamp - y.timestamp;
-            })
+            const sortedProjectsList = await sortAsc(this.state.projectsList)
             this.setState({projectsList: sortedProjectsList, sortDirection: 'asc'})
-
         }
     }
     fetchData = async () => {
@@ -46,21 +40,15 @@ class Projects extends React.Component {
                 error: null
             })
             if (this.state.sortDirection === 'desc'){
-                const sortedProjectsList = await this.state.projectsList.sort( function (x,y) {
-                    return y.timestamp - x.timestamp;
-                })
+                const sortedProjectsList = await sortDesc(this.state.projectsList)
                 this.setState({projectsList: sortedProjectsList})
             } else {
-                const sortedProjectsList = await this.state.projectsList.sort( function (x,y) {
-                    return x.timestamp - y.timestamp;
-                })
+                const sortedProjectsList = await sortAsc(this.state.projectsList)
                 this.setState({projectsList: sortedProjectsList})
             }
-
-
         }
-
     };
+
     render() {
 
         return (
@@ -95,9 +83,7 @@ class Projects extends React.Component {
     }
     async componentDidMount(){
         const projectsList = await api.getProjectsDiff();
-        const sortedProjectsList =  projectsList.data.sort( function (x,y) {
-            return y.timestamp - x.timestamp;
-        })
+        const sortedProjectsList =  sortDesc(projectsList.data)
 
         await this.setState({
             projectsList: sortedProjectsList,

@@ -43,8 +43,26 @@ const getUsersDiff = () => {
 
   return resolveOrRejectCollection(timesCalled, usersDiff);
 };
+export const sortDesc = (list) => {
+  if (list && list.length > 0){
+    list.sort(function (x, y) {
+      return y.timestamp - x.timestamp;
+    })
+  }
+return list
+}
+export const sortAsc = (list) => {
+  if (list && list.length > 0){
+    list.sort(function (x, y) {
+      return x.timestamp - y.timestamp;
+    })
+  }
+  return list
+}
 
 export default {
   getProjectsDiff: getProjectsDiff(),
   getUsersDiff: getUsersDiff(),
+  // sortDesc: sortDesc(),
+  // sortAsc: sortAsc()
 };

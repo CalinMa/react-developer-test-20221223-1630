@@ -2,6 +2,7 @@ import React from 'react';
 import List from './List'
 import api from "../../lib/api";
 import {Button, CircularProgress} from "@material-ui/core";
+import {sortAsc, sortDesc} from "../../lib/api";
 
 class Users extends React.Component {
 
@@ -17,16 +18,12 @@ class Users extends React.Component {
 
          if (sortDirection === 'desc') {
 
-             const sortedUsersList = await this.state.usersList.sort(function (x, y) {
-                 return y.timestamp - x.timestamp;
-             })
+             const sortedUsersList = await sortDesc(this.state.usersList)
               this.setState({usersList: sortedUsersList, sortDirection: 'desc'})
 
          } else {
 
-             const sortedUsersList = await this.state.usersList.sort(function (x, y) {
-                 return x.timestamp - y.timestamp;
-             })
+             const sortedUsersList = await sortAsc(this.state.usersList)
               this.setState({usersList: sortedUsersList, sortDirection: 'asc'})
 
          }
@@ -48,21 +45,15 @@ class Users extends React.Component {
                  error: null
              })
              if (this.state.sortDirection === 'desc'){
-                 const sortedUsersList = await this.state.usersList.sort( function (x,y) {
-                     return y.timestamp - x.timestamp;
-                 })
+                 const sortedUsersList = await sortDesc(this.state.usersList)
                  this.setState({usersList: sortedUsersList})
              } else {
-                 const sortedUsersList = await this.state.usersList.sort( function (x,y) {
-                     return x.timestamp - y.timestamp;
-                 })
+                 const sortedUsersList = await sortAsc(this.state.usersList)
                  this.setState({usersList: sortedUsersList})
              }
-
-
          }
-
     };
+
     render() {
 
         return (
@@ -97,9 +88,7 @@ class Users extends React.Component {
     }
     async componentDidMount(){
         const usersList = await api.getUsersDiff();
-        const sortedUsersList =  usersList.data.sort( function (x,y) {
-            return y.timestamp - x.timestamp;
-        })
+        const sortedUsersList =  sortDesc(usersList.data)
 
         await this.setState({
             usersList: sortedUsersList,
